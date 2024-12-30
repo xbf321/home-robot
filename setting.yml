@@ -1,0 +1,9 @@
+porcupine:
+  accessKey: ''
+
+tts_engine: Edge
+asr_engine: Tencent
+
+tencent_asr:
+  secretId: ''
+  secretKey: ''

@@ -1,0 +1,25 @@
+{
+  "name": "home-robot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node --test test/"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@picovoice/porcupine-node": "^3.0.4",
+    "@picovoice/pvrecorder-node": "^1.2.4",
+    "consola": "^3.3.1",
+    "fs-extra": "^11.2.0",
+    "google-tts-api": "^2.0.2",
+    "node-edge-tts": "^1.2.7",
+    "node-record-lpcm16": "^1.0.1",
+    "tencentcloud-sdk-nodejs": "^4.0.996",
+    "uuid": "^11.0.3",
+    "yaml": "^2.6.1"
+  }
+}
