@@ -2,5 +2,10 @@ FROM node:20
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y sox
-# RUN apt-get update && apt-get install -y alsa-utils mpg123
+RUN apt-get update && apt-get install -y sox ffmpeg libsox-fmt-all alsa-utils vim
+
+RUN git clone https://github.com/xbf321/home-robot.git .
+
+RUN npm config set registry https://registry.npmmirror.com
+
+RUN npm install

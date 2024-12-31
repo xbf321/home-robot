@@ -24,7 +24,7 @@ class Detector {
     return Detector.instance;
   }
   async init(robot) {
-    const audioDeviceIndex = -1;
+    const audioDeviceIndex = config.audio_device_index;
     const frameLength = this.handle.frameLength;
 
     const isInterrupted = false;

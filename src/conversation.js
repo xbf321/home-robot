@@ -15,7 +15,6 @@ class Conversation {
     this.hasPardon = false;
   }
   interrupt() {
-    consola.info('interrupt');
     if (this.robot.player.isPlaying) {
       this.robot.player.stop();
     }
@@ -70,7 +69,7 @@ class Conversation {
       return;
     }
     consola.info(`响应指令...，指令是：${query}`);
-    await this.play(path.join(ASSETS_DIR, 'test-song.mp3'));
+    await this.say(`您说的是：${query}`);
   }
 
   async pardon() {

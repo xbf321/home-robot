@@ -1,20 +1,20 @@
 # home-robot
  
 
-## Docker
+## Docker 部署
 
 ```
 docker run -it --rm --privileged --device /dev/snd node:20 bash
 ```
 
 ```
-apt-get update && apt-get install -y sox
-wget pulseaudio ffmpeg libsox-fmt-all
 ffmpeg -i test.wav -ar 16000 -ac 1 test2.wav
 
-play test2.wav -t alsa
+export AUDIODEV=hw:2,0
 
-wget https://m10.music.126.net/20241224183138/44c343135ef1c4d7be14bc060848a0b2/ymusic/9fd6/e885/8285/9a7d1ab14d3e61c3335143ee16deb271.mp3?vuutv=UZG1OcNKZ8NMrmAQVdUq0IlBq7xctSvCvhH/Fcw5wyEMnDB18E1sPOjE7/zdsFp/Kum7NblOttNE4raiJ6obHczikwhk58uvHPFKWkvMSwUuY58sJT6KANdCTgfx1p6MHi44YV5UeBy8ykI2Jtxp1Q== -O love.mp3
+docker build -t home-robot .
+
+wget http://m10.music.126.net/20241231151217/cb633df0f796c005eddfca219082ebd7/ymusic/5353/0f0f/0358/d99739615f8e5153d77042092f07fd77.mp3?vuutv=cHYaNnVuELG1U817zJDPa/tUykT+U53Wz7kIbKYd4QURJg2G2u9Ckv8AikXFHqiTN1XMQjhEK24JZQOQvo+TxmY/Jh32CW4hi38iaHW/pwn4CUWhz72JH8keitWyUy9CN9X0qZtMuA09QHMl4f+5UA== -O test-mp3.mp3
 
 wget https://download.samplelib.com/wav/sample-12s.wav -O test.wav
 ```

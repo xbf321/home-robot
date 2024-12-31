@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { EdgeTTS } from 'node-edge-tts';
 import * as googleTTS from 'google-tts-api';
 
-import downloadFile from './utils/delete-file.js';
+import downloadFile from './utils/download-file.js';
 import { TTSProvider, TMP_DIR } from './utils/constant.js';
 
 const AUDIO_EXTENSION = 'wav';
@@ -34,6 +34,7 @@ class Google extends AbstractTTS {
       slow: false,
       host: 'https://translate.google.com',
     });
+    console.info('url', url);
     await downloadFile(url, tmpFile);
     return tmpFile;
   }

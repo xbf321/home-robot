@@ -1,6 +1,9 @@
 porcupine:
   accessKey: ''
 
+# 声音设备编号
+audio_device_index: -1
+
 tts_engine: Edge
 asr_engine: Tencent
 

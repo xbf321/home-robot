@@ -1,5 +1,6 @@
 import { consola } from 'consola';
 import path from 'node:path';
+import fs from 'fs-extra';
 
 import Player from './player.js';
 import TTSFactory from './tts.js';
@@ -24,6 +25,7 @@ class Robot {
     this.tts = TTSFactory.createInstance(TTSProvider[config.tts_engine]);
     this.asr = ASRFactory.createInstance(ASRProvider[config.asr_engine]);
     Detector.getInstance().init(this);
+    await fs.ensureDir(TMP_DIR);
     consola.info('Robot 初始化完毕');
     // await this.conversation.play(path.join(ASSETS_DIR, 'welcome.wav'));
     await this.conversation.play(path.join(ASSETS_DIR, 'beep_hi.wav'));
