@@ -69,7 +69,7 @@ class Conversation {
       return;
     }
     consola.info(`响应指令...，指令是：${query}`);
-    await this.say(`您说的是：${query}`);
+    await this.say(`您说的是：${query}`, true, true);
   }
 
   async pardon() {
@@ -82,7 +82,7 @@ class Conversation {
     await this.say('抱歉，刚刚没听清，能再说一遍吗？');
   }
 
-  async say(words, appendHistory = true) {
+  async say(words, appendHistory = true, deleted = false) {
     if (!words) {
       return;
     }
@@ -91,11 +91,13 @@ class Conversation {
     }
     consola.info(`即将朗读语音：${words}`);
     const audio = await this.robot.tts.speech(words);
-    this.play(audio);
+    this.play(audio, deleted);
   }
 
-  async play(audio) {
-    this.robot.player.play(audio);
+  async play(audio, deleted = false) {
+    return new Promise((resolve) => {
+      this.robot.player.play(audio, deleted, resolve);
+    });
   }
 }
 

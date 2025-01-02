@@ -6,6 +6,6 @@ import { TTSProvider } from '../src/utils/constant.js';
 
 test('EdgeTTS', async () => {
   // const tts = TTSFactory.createInstance(TTSProvider.Edge);
-  // const file = await tts.speech('您好，国际四大天王，你叫什么名字，你住在哪里。');
+  // const file = await tts.speech('在');
   // console.info(file);
 });

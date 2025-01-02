@@ -11,6 +11,7 @@ const ASRProvider = {
 const TTSProvider = {
   Edge: 'Edge',
   Google: 'Google',
+  Xunfei: 'Xunfei',
 };
 
 export {

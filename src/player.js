@@ -22,14 +22,18 @@ class Player {
     return Player.instance;
   }
 
-  async play(src) {
-    consola.info(`追加到播放列表：${src}`);
-    try {
-      await fs.ensureFile(src);
-      this.playQueue.push(src);
-    } catch(err) {
+  play(src, deleted = false, callback = null) {
+    const exists = fs.existsSync(src);
+    if (!exists) {
       consola.error(`path not exists: ${src}`);
+      return;
     }
+    consola.info(`追加到播放列表：${src}`);
+    this.playQueue.push({
+      src,
+      deleted,
+      callback,
+    });
   }
 
   stop() {
@@ -49,17 +53,18 @@ class Player {
         if (self.isPlaying)  {
           return;
         }
-        const src = self.playQueue.shift();
-        if (!src) {
+        const item = self.playQueue.shift();
+        if (!item) {
           return;
         }
+        const { src, deleted, callback } = item;
         consola.info(`开始播放音频: ${src}`);
-        this.doPlay(src);
-      }, 1000);
+        this.doPlay(src, deleted, callback);
+      });
     });
   }
 
-  doPlay(src) {
+  doPlay(src, deleted = false, callback = null) {
     const self = this;
     const { platform } = process;
     let cmd;
@@ -68,16 +73,21 @@ class Player {
       cmd = 'afplay';
       args = [src];
     } else {
-      cmd = 'play';
-      args = [src, '-t', 'alsa'];
+      cmd = 'ffplay';
+      args = [src, '-autoexit'];
     }
     self.isPlaying = true;
     this.currentProcess = spawn(cmd, args);
     this.currentProcess.on('close', async () => {
       self.isPlaying = false;
       this.currentProcess = null;
+      callback && await callback();
+
+      if (deleted) {
+        await deleteFile(src);
+        consola.info(`语音已物理删除`);
+      }
       consola.info('语音播放完毕');
-      // await deleteFile(src);
     });
   }
 }

@@ -1,8 +1,10 @@
+import path from 'node:path';
 import { consola } from 'consola';
 import { Porcupine, BuiltinKeyword } from '@picovoice/porcupine-node';
 import { PvRecorder } from '@picovoice/pvrecorder-node';
 
 import config from './utils/config.js';
+import { ASSETS_DIR } from './utils/constant.js';
 
 class Detector {
   constructor() {
@@ -40,6 +42,7 @@ class Detector {
       let index = this.handle.process(pcm);
       
       if (index !== -1) {
+        await robot.conversation.play(path.join(ASSETS_DIR, ['iamhere.wav', 'here.wav'][Math.floor(Math.random() * 2)]));
         consola.info("Detected wake word");
         recorder.stop();
         robot.conversation.interrupt();

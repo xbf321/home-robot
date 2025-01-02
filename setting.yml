@@ -10,3 +10,8 @@ asr_engine: Tencent
 tencent_asr:
   secretId: ''
   secretKey: ''
+
+xunfei_tts:
+  appKey: ''
+  secretId: ''
+  secretKey: ''

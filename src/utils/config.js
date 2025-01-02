@@ -1,7 +1,19 @@
 import path from 'node:path';
-import fs from 'node:fs';
+import fs from 'fs-extra';
 import YAML from 'yaml'
+import merge from 'lodash.merge';
 
-const file = fs.readFileSync(path.join(process.cwd(), './setting.yml'), 'utf8');
-const content = YAML.parse(file);
-export default content;
+const parseContent = (configFile) => {
+  const filePath = path.join(process.cwd(), configFile);
+  const exists = fs.existsSync(filePath);
+  if (!exists) {
+    return {};
+  }
+  const content = fs.readFileSync(filePath, 'utf8');
+  return YAML.parse(content);
+};
+
+const prodContent = parseContent('./setting.yml');
+const devContent = parseContent('./setting.local.yml');
+
+export default merge(prodContent, devContent);
