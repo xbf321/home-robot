@@ -1,3 +1,4 @@
 .tmp/
 node_modules/
 setting.local.yml
+package-local.json
