@@ -3,9 +3,13 @@ import recorder from 'node-record-lpcm16';
 import fs from 'fs-extra';
 import path from 'node:path';
 import { v4 as uuidv4 } from 'uuid';
+import merge from 'lodash.merge';
+import hash from 'object-hash';
+import { LRUCache } from 'lru-cache';
 
 import { TMP_DIR, ASSETS_DIR } from './utils/constant.js';
 import deleteFile from './utils/delete-file.js';
+import stripPunctuation from './utils/strip-punctuation.js';
 
 class Conversation {
   constructor(robot) {
@@ -13,6 +17,9 @@ class Conversation {
     this.history = [];
     this.saying = false;
     this.hasPardon = false;
+    this.lruCache = new LRUCache({
+      max: 500
+    });
   }
   interrupt() {
     if (this.robot.player.isPlaying) {
@@ -69,35 +76,72 @@ class Conversation {
       return;
     }
     consola.info(`响应指令...，指令是：${query}`);
-    await this.say(`您说的是：${query}`, true, true);
+    await this.say(`您说的是：${query}`, {
+      callback: (src) => {
+        console.info(`delete: ${src}`);
+      }
+    });
+    consola.info('end');
   }
 
   async pardon() {
+    const params = {
+      cache: true,
+      appendHistory: false,
+    };
     if (this.hasPardon) {
       this.hasPardon = false;
-      await this.say('没听清呢');
+      await this.say('没听清呢', params);
       return;
     }
     this.hasPardon = true;
-    await this.say('抱歉，刚刚没听清，能再说一遍吗？');
+    await this.say('抱歉，刚刚没听清，能再说一遍吗？', params);
   }
 
-  async say(words, appendHistory = true, deleted = false) {
+  async say(words, params = {}) {
+    words = stripPunctuation(words);
     if (!words) {
       return;
     }
+    const {
+      appendHistory,
+      callback,
+      cache,
+    } = merge({
+      cache: false,
+      appendHistory: true,
+      callback: () => {}
+    }, params || {});
     if (appendHistory) {
       this.history.push(words);
     }
     consola.info(`即将朗读语音：${words}`);
-    const audio = await this.robot.tts.speech(words);
-    this.play(audio, deleted);
+    const wordsHashKey = hash(words);
+    let audio = null;
+    if (cache) {
+      audio = this.lruCache.get(wordsHashKey);
+      if (!audio) {
+        audio = await this.robot.tts.speech(words);
+        this.lruCache.set(wordsHashKey, audio);
+      }
+    } else {
+      audio = await this.robot.tts.speech(words);
+    }
+    this.play(audio, callback);
   }
 
-  async play(audio, deleted = false) {
+  async play(audio, callback) {
     return new Promise((resolve) => {
-      this.robot.player.play(audio, deleted, resolve);
+      this.robot.player.play(audio, (src) => {
+        if (callback) {
+          callback && callback(src);
+          resolve();
+        } else {
+          resolve();
+        }
+      });
     });
+    
   }
 }
 

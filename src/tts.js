@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { EdgeTTS } from 'node-edge-tts';
 import * as googleTTS from 'google-tts-api';
 import xunfeiTTS from 'xf-tts-socket';
+import { consola } from 'consola';
 
 import downloadFile from './utils/download-file.js';
 import { TTSProvider, TMP_DIR } from './utils/constant.js';
@@ -19,6 +20,7 @@ class Edge extends AbstractTTS {
     this.handle = new EdgeTTS();
   }
   async speech(text) {
+    consola.info(`调用 Edge TTS，Text：${text}`);
     const tmpFile = path.join(TMP_DIR, `${uuidv4()}.${AUDIO_EXTENSION}`);
     await this.handle.ttsPromise(text, tmpFile);
     return tmpFile;

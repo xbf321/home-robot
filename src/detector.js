@@ -6,6 +6,8 @@ import { PvRecorder } from '@picovoice/pvrecorder-node';
 import config from './utils/config.js';
 import { ASSETS_DIR } from './utils/constant.js';
 
+const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+
 class Detector {
   constructor() {
     const handle = new Porcupine(
@@ -42,7 +44,8 @@ class Detector {
       let index = this.handle.process(pcm);
       
       if (index !== -1) {
-        await robot.conversation.play(path.join(ASSETS_DIR, ['iamhere.wav', 'here.wav'][Math.floor(Math.random() * 2)]));
+        robot.conversation.play(path.join(ASSETS_DIR, ['iamhere.wav', 'here.wav'][Math.floor(Math.random() * 2)]));
+        await delay(1000);
         consola.info("Detected wake word");
         recorder.stop();
         robot.conversation.interrupt();

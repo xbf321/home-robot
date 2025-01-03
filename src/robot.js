@@ -20,15 +20,14 @@ class Robot {
     return Robot.instance;
   }
   async run() {
+    await fs.ensureDir(TMP_DIR);
     this.conversation = new Conversation(this);
     this.player = new Player();
     this.tts = TTSFactory.createInstance(TTSProvider[config.tts_engine]);
     this.asr = ASRFactory.createInstance(ASRProvider[config.asr_engine]);
     Detector.getInstance().init(this);
-    await fs.ensureDir(TMP_DIR);
     consola.info('Robot 初始化完毕');
-    // await this.conversation.play(path.join(ASSETS_DIR, 'welcome.wav'));
-    await this.conversation.play(path.join(ASSETS_DIR, 'beep_hi.wav'));
+    this.conversation.play(path.join(ASSETS_DIR, 'beep_hi.wav'));
   }
 }
 

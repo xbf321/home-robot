@@ -1,4 +1,4 @@
 .tmp/
 node_modules/
 setting.local.yml
-package-local.json
+package-lock.json

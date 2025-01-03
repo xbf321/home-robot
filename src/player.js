@@ -1,9 +1,6 @@
 import fs from 'fs-extra';
 import { consola } from 'consola';
-import path from 'node:path';
 import { spawn } from 'node:child_process';
-
-import deleteFile from './utils/delete-file.js';
 
 class Player {
   isPlaying = false;
@@ -22,7 +19,7 @@ class Player {
     return Player.instance;
   }
 
-  play(src, deleted = false, callback = null) {
+  play(src, callback = null) {
     const exists = fs.existsSync(src);
     if (!exists) {
       consola.error(`path not exists: ${src}`);
@@ -31,7 +28,6 @@ class Player {
     consola.info(`追加到播放列表：${src}`);
     this.playQueue.push({
       src,
-      deleted,
       callback,
     });
   }
@@ -57,14 +53,14 @@ class Player {
         if (!item) {
           return;
         }
-        const { src, deleted, callback } = item;
+        const { src, callback } = item;
         consola.info(`开始播放音频: ${src}`);
-        this.doPlay(src, deleted, callback);
+        this.doPlay(src, callback);
       });
     });
   }
 
-  doPlay(src, deleted = false, callback = null) {
+  doPlay(src, callback = null) {
     const self = this;
     const { platform } = process;
     let cmd;
@@ -78,15 +74,10 @@ class Player {
     }
     self.isPlaying = true;
     this.currentProcess = spawn(cmd, args);
-    this.currentProcess.on('close', async () => {
+    this.currentProcess.on('close', () => {
       self.isPlaying = false;
       this.currentProcess = null;
-      callback && await callback();
-
-      if (deleted) {
-        await deleteFile(src);
-        consola.info(`语音已物理删除`);
-      }
+      callback && callback(src);
       consola.info('语音播放完毕');
     });
   }
