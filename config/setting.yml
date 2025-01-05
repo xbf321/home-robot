@@ -1,0 +1,31 @@
+porcupine:
+  accessKey: ''
+
+# 声音设备编号
+audio_device_index: -1
+
+tts_engine: Edge
+asr_engine: Tencent
+
+tencent_asr:
+  secretId: ''
+  secretKey: ''
+
+xunfei_tts:
+  appKey: ''
+  secretId: ''
+  secretKey: ''
+
+dialogflow_nlu:
+  projectId: ''
+  credentialsPath: ''
+
+plugins:
+  weather:
+    enable: true
+    key: ''
+    location: 'langfang'
+    patterns:
+  local_music:
+    enable: true
+    path: ''

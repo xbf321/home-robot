@@ -1,0 +1,5 @@
+.tmp/
+node_modules/
+setting.local.yml
+package-lock.json
+dialogflow-auth.json

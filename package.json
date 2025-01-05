@@ -1,0 +1,32 @@
+{
+  "name": "home-robot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node --test test/"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/dialogflow": "^6.13.0",
+    "@picovoice/porcupine-node": "^3.0.4",
+    "@picovoice/pvrecorder-node": "^1.2.4",
+    "consola": "^3.3.1",
+    "fs-extra": "^11.2.0",
+    "glob": "^11.0.0",
+    "google-tts-api": "^2.0.2",
+    "lodash.merge": "^4.6.2",
+    "lru-cache": "^11.0.2",
+    "node-edge-tts": "^1.2.7",
+    "node-record-lpcm16": "^1.0.1",
+    "object-hash": "^3.0.0",
+    "tencentcloud-sdk-nodejs": "^4.0.996",
+    "urllib": "^4.6.11",
+    "uuid": "^11.0.3",
+    "xf-tts-socket": "^1.2.6",
+    "yaml": "^2.6.1"
+  }
+}
