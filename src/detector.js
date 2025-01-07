@@ -41,7 +41,7 @@ class Detector {
     this.readlineTest(robot);
     return;
     const handle = new Porcupine(
-      config.porcupine.accessKey,
+      config.wakeup.provider.porcupine.accessKey,
       [BuiltinKeyword.HEY_GOOGLE],
       [0.5]
     );

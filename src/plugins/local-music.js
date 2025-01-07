@@ -1,6 +1,6 @@
 import { consola } from 'consola';
 import path from 'node:path';
-import { glob, iterate } from 'glob'
+import { glob } from 'glob'
 
 import MusicPlayer from '../player/music-player.js';
 import BasePlugin from './_base.js';
@@ -15,18 +15,40 @@ class LocalMusic extends BasePlugin {
     this.player = null;
     this.songList = [];
   }
+
   async init() {
     const pattern = path.join(config.plugins.local_music.path, '*.{mp3,wav}');
     this.songList = await glob([pattern]);
     this.player = new MusicPlayer(this.songList);
+    console.info('local-music init');
   }
+
+  async matchIntens(parsed) {
+    let isValid = false;
+    const intens = [
+      'PLAY',
+      'CHANGE_TO_NEXT',
+      'CHANGE_TO_PREV',
+      'CLOSE_MUSIC',
+    ];
+    intens.forEach((item) => {
+      isValid = this.nlu.hasIntent(parsed, item);
+      if (isValid) {
+        return;
+      }
+    });
+    return isValid;
+  }
+
   async handle(text, parsed) {
-    await this.init();
+    if (!this.player) {
+      await this.init();
+    }
     if (this.songList.length === 0) {
       this.say("本地音乐目录并没有音乐文件，播放失败")
       return;
     }
-    if (this.nlu.hasIntent(parsed, 'LOCAL_MUSIC_PLAY')) {
+    if (this.nlu.hasIntent(parsed, 'PLAY')) {
       this.player.play();
     } else if (this.nlu.hasIntent(parsed, 'CHANGE_TO_NEXT')) {
       this.player.next();
@@ -40,20 +62,7 @@ class LocalMusic extends BasePlugin {
     }
   }
   isValidImmersive(text, parsed) {
-    let isValid = false;
-    const intens = [
-      'LOCAL_MUSIC_PLAY',
-      'CHANGE_TO_NEXT',
-      'CHANGE_TO_PREV',
-      'CLOSE_MUSIC',
-    ];
-    intens.forEach((item) => {
-      isValid = this.nlu.hasIntent(parsed, item);
-      if (isValid) {
-        return;
-      }
-    });
-    return isValid;
+    return this.matchIntens(parsed);
   }
   restore() {
     consola.info('执行');
@@ -74,7 +83,7 @@ class LocalMusic extends BasePlugin {
     //         self.player.pause()
   }
   isValid(text, parsed) {
-    return this.nlu.hasIntent(parsed, 'LOCAL_MUSIC_PLAY');
+    return this.matchIntens(parsed);
   }
 }
 export default LocalMusic;

@@ -1,6 +1,7 @@
 import dialogflow from '@google-cloud/dialogflow';
 import { v4 as uuidv4 } from 'uuid';
 import path from 'node:path';
+import { consola } from 'consola';
 
 import { NLUProvider } from './utils/constant.js';
 import config from './utils/config.js';
@@ -12,14 +13,14 @@ class AbstractNLU {
 class Dialogflow extends AbstractNLU {
   constructor() {
     super();
-    process.env.GOOGLE_APPLICATION_CREDENTIALS = path.join(process.cwd(), config.dialogflow_nlu.credentialsPath);
+    process.env.GOOGLE_APPLICATION_CREDENTIALS = path.join(process.cwd(), config.nlu.provider.dialogflow.credentialsPath);
     this.sessionClient = new dialogflow.SessionsClient();
   }
   async _detectIntent(
     query,
     contexts,
   ) {
-    const projectId = config.dialogflow_nlu.projectId;
+    const projectId = config.nlu.provider.dialogflow.projectId;
     const sessionId = uuidv4();
     const languageCode = 'zh-cn';
     // The path to identify the agent that owns the created intent.
@@ -51,7 +52,16 @@ class Dialogflow extends AbstractNLU {
 
   // 进行 NLU 解析
   async parse(query) {
-    return await this._detectIntent(query);
+    const response = await this._detectIntent(query);
+    const { queryText, intent } = (response || {}).queryResult || {};
+    const { parameters, displayName: intentName } = intent || {};
+    const logMessage = JSON.stringify({
+      queryText,
+      intentName,
+      parameters,
+    });
+    consola.info(`执行 NLU 解析，结果：${logMessage}`);
+    return response;
   }
 
   // 提取意图

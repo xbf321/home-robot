@@ -1,25 +1,33 @@
-porcupine:
-  accessKey: ''
+
+wakeup:
+  engine: porcupine
+  provider:
+    porcupine:
+      accessKey: ''
 
 # 声音设备编号
 audio_device_index: -1
 
-tts_engine: Edge
-asr_engine: Tencent
-
-tencent_asr:
-  secretId: ''
-  secretKey: ''
-
-xunfei_tts:
-  appKey: ''
-  secretId: ''
-  secretKey: ''
-
-dialogflow_nlu:
-  projectId: ''
-  credentialsPath: ''
-
+tts:
+  engine: Edge
+  provider:
+    xunfei:
+      appKey: ''
+      secretId: ''
+      secretKey: ''
+asr:
+  engine: Tencent
+  provider:
+    tencent:
+      secretId: ''
+      secretKey: ''
+nlu:
+  engine: Dialogflow
+  provider:
+    dialogflow:
+      projectId: ''
+      credentialsPath: ''
+  
 plugins:
   weather:
     enable: true

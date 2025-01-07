@@ -30,6 +30,7 @@ class Weather extends BasePlugin {
     let location = config.plugins.weather.location;
     const accessKey = config.plugins.weather.key;
     const locationParamInfo = this.nlu.getParameter(parsed, 'location');
+    console.info('locationData', locationParamInfo);
     if (locationParamInfo) {
       const { kind } = locationParamInfo.city;
       location = locationParamInfo.city[kind];
@@ -44,15 +45,16 @@ class Weather extends BasePlugin {
         });
         return;
       }
+      
       const { daily, location: locationData } = response.results[0];
+      
       const { text_day, text_night, humidity, high, low } = daily[0];
       // 今天 廊坊，白天 # 晚间
       const msg = `
         今天${locationData.name}，
         白天${text_day}，
         晚间${text_night}，
-        气温最高${high}度，
-        气温最低${low}度，
+        气温最高${high}度，最低${low}度，
         湿度${humidity}`;
       this.say(msg);
     } catch (err) {

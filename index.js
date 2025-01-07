@@ -2,7 +2,7 @@ import Robot from "./src/robot.js";
 
 const robot = Robot();
 
-(async function () {
+(async () => {
   try {
     await robot.run();
   } catch (e) {

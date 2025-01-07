@@ -50,9 +50,9 @@ class Xunfei extends AbstractTTS {
   async speech(text) {
     return new Promise((resolve, reject) => {
       const auth = { 
-        app_id: config.xunfei_tts.appId,
-        app_skey: config.xunfei_tts.apiSecret,
-        app_akey: config.xunfei_tts.apiKey,
+        app_id: config.tts.provider.xunfei.appId,
+        app_skey: config.tts.provider.xunfei.apiSecret,
+        app_akey: config.tts.provider.xunfei.apiKey,
       };
       const business = {
         aue: 'lame',

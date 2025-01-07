@@ -14,8 +14,8 @@ class Tencent extends AbstractASR {
     const AsrClient = tencentcloud.asr.v20190614.Client;
     this.client = new AsrClient({
       credential: {
-        secretId: config.tencent_asr.secretId,
-        secretKey: config.tencent_asr.secretKey,
+        secretId: config.asr.provider.tencent.secretId,
+        secretKey: config.asr.provider.tencent.secretKey,
       },
       profile: {
         httpProfile: {

@@ -26,13 +26,13 @@ class SoxPlayer {
   }
 
   stop() {
+    consola.info(`SoxPlayer 停止播放 ${(this.currentProcess && this.currentProcess.pid) || null} 进程`);
     if (!this.currentProcess) {
       return;
     }
-    this.currentProcess.kill('SIGHUP');
+    this.currentProcess.kill();
     this.isPlaying = false;
     this.playQueue = [];
-    consola.info('停止播放');
   }
 
   async playLoop() {
@@ -47,7 +47,6 @@ class SoxPlayer {
           return;
         }
         const { src, callback } = item;
-        consola.info(`开始播放音频: ${src}`);
         this.doPlay(src, callback);
       });
     });
@@ -67,11 +66,17 @@ class SoxPlayer {
     }
     self.isPlaying = true;
     this.currentProcess = spawn(cmd, args);
-    this.currentProcess.on('close', () => {
-      self.isPlaying = false;
-      this.currentProcess = null;
-      consola.info('语音播放完毕');
-      callback && callback(src);
+    const { pid } = this.currentProcess;
+    consola.info(`开始播放 ${src}（${pid}）`);
+    this.currentProcess.on('close', (code) => {
+      this.isPlaying = false;
+      // code: 0 播放完毕
+      // code: null 中断退出
+      consola.info(`${src} 播放完毕（${pid}）`);
+      if (code === 0) {
+        consola.info(`并调用 callback（${this.currentProcess.pid}）`);
+        callback && callback(src);
+      }
     });
   }
 }

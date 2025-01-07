@@ -94,8 +94,6 @@ class Conversation {
     const lastImmersiveMode = this.immersiveMode;
     const parsed = await this.robot.nlu.parse(query);
     const isMatchSkill = await this.robot.brain.query(query, parsed);
-    const isChatMode = false;
-
     console.info('isMatchSkill', isMatchSkill);
     if(isMatchSkill) {
       // 命中技能

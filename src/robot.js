@@ -12,7 +12,13 @@ import Conversation from "./conversation.js";
 
 
 import config from './utils/config.js';
-import { TTSProvider, ASRProvider, NLUProvider, TMP_DIR, ASSETS_DIR } from './utils/constant.js';
+import {
+  TTSProvider,
+  ASRProvider,
+  NLUProvider,
+  TMP_DIR,
+  ASSETS_DIR,
+} from './utils/constant.js';
 
 class Robot {
   conversation = null;
@@ -22,9 +28,9 @@ class Robot {
   asr = null;
   nlu = null;
   constructor() {
-    this.tts = TTSFactory.createInstance(TTSProvider[config.tts_engine]);
-    this.asr = ASRFactory.createInstance(ASRProvider[config.asr_engine]);
-    this.nlu = NLUFactory.createInstance(NLUProvider.Dialogflow);
+    this.tts = TTSFactory.createInstance(TTSProvider[config.tts.engine]);
+    this.asr = ASRFactory.createInstance(ASRProvider[config.asr.engine]);
+    this.nlu = NLUFactory.createInstance(NLUProvider[config.nlu.engine]);
     this.player = new SoxPlayer();
     this.conversation = new Conversation(this);
     this.brain = new Brain(this);
